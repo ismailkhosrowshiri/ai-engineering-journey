@@ -1,78 +1,84 @@
-def calculator(first_number,operator,second_number):
-    """_summary_
-
-    Args:
-        first_number (float): first number or result
-        operator (string): operator for calculating
-        second_number (float): second number for doing calculate
-
-    Returns:
-        float: result of the calculator
-    """
-    if operator== "+":
-        return first_number + second_number
-    elif operator== "-":
-        return first_number - second_number
-    elif operator== "/":
-        return first_number / second_number
-    elif operator == "*":
-        return first_number * second_number
-    else:
-        return "wrong operator selected"
-
-first_num=float(input('type your first number\n'))
-operator_num=input("select your operator\n'+'\n'-'\n'*'\n'/'\n").lower()
-second_num=float(input("type your second number\n"))
-result=0
-result=calculator(first_number=first_num,operator=operator_num,second_number=second_num)
-print(result)
-continue_calc=True
-
-while continue_calc:
-    continue_with_result=input(f"type 'y' to continue with {result} , or type 'n' to start new calculation\n")
-    
-    if continue_with_result== "y":
-        operator_num=input("select your operator\n'+'\n'-'\n'*'\n'/'\n").lower()
-        second_num=float(input("type your second number\n"))
-        first_num=result
-        result=calculator(first_number=first_num,operator=operator_num,second_number=second_num)
-    elif continue_with_result=="n":
-        first_num=float(input('type your first number\n'))
-        operator_num=input("select your operator\n'+'\n'-'\n'*'\n'/'\n").lower()
-        second_num=float(input("type your second number\n"))
-        result=0
-        result=calculator(first_number=first_num,operator=operator_num,second_number=second_num)
-    continue_calculating=print(input("do you wanna use from calculator if you wanna type yes or not type no")).lower()
-    if continue_calculating== "no":
-        continue_calc=False
+def add(first_number, second_number):
+    """Return the sum of two numbers."""
+    return first_number + second_number
 
 
-#another way to  create calculator
-def add(n1,n2):
-    return n1 + n2
-def subtract(n1,n2):
-    return n1 - n2
-def multiply (n1,n2):
-    return n1 * n2
-def divide (n1,n2):
-    return n1 /n2
- 
-operators={"+":add,"-":subtract,"*":multiply,"/":divide}
-def calc():
-    should_accumulate=True
-    num1=float(input("input your first number\n"))
+def subtract(first_number, second_number):
+    """Return the difference between two numbers."""
+    return first_number - second_number
 
-    while should_accumulate:
-        op_symbols_input=input("pick an operation \n")
-        for symbols in operators:
-            print(symbols)    
-        num2=float(input("input your second number\n"))
-        answer=operators[op_symbols_input](n1=num1,n2=Num2)
-        print(f"{num1} {op_symbols_input} {num2} = {answer}")
-        choice=input(f"type 'y' to continue calculating with {answer} or type 'n' to start a new calculation")
-        if choice=="y":
-            num1=answer
-        elif choice=="n":
-            should_accumulate=False
-            calc()
-calc()
+
+def multiply(first_number, second_number):
+    """Return the product of two numbers."""
+    return first_number * second_number
+
+
+def divide(first_number, second_number):
+    """Return the quotient of two numbers."""
+    if second_number == 0:
+        raise ValueError("Cannot divide by zero.")
+    return first_number / second_number
+
+
+OPERATIONS = {
+    "+": add,
+    "-": subtract,
+    "*": multiply,
+    "/": divide,
+}
+
+
+def calculate(first_number, operator, second_number):
+    """Calculate a result using the selected arithmetic operator."""
+    if operator not in OPERATIONS:
+        raise ValueError("Unsupported operator. Choose +, -, *, or /.")
+
+    return OPERATIONS[operator](first_number, second_number)
+
+
+def get_number(prompt):
+    """Read a valid number from the user."""
+    while True:
+        try:
+            return float(input(prompt))
+        except ValueError:
+            print("Please enter a valid number.")
+
+
+def calculator():
+    """Run the interactive calculator."""
+    first_number = get_number("Enter the first number: ")
+
+    while True:
+        print("Available operations: " + " ".join(OPERATIONS))
+        operator = input("Choose an operation (+, -, *, /): ").strip()
+
+        second_number = get_number("Enter the next number: ")
+
+        try:
+            result = calculate(first_number, operator, second_number)
+        except ValueError as error:
+            print(error)
+            continue
+
+        print(f"{first_number:g} {operator} {second_number:g} = {result:g}")
+
+        choice = input(
+            "Type 'y' to continue with the result, "
+            "'n' to start a new calculation, or 'q' to quit: "
+        ).strip().lower()
+
+        if choice == "y":
+            first_number = result
+        elif choice == "n":
+            first_number = get_number("Enter a new first number: ")
+        elif choice == "q":
+            print("Goodbye!")
+            break
+        else:
+            print("Unrecognized choice. Starting a new calculation.")
+            first_number = get_number("Enter a new first number: ")
+
+
+if __name__ == "__main__":
+    calculator()
